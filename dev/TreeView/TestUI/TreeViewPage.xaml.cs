@@ -89,13 +89,14 @@ namespace MUXControlsTestApp
                 && (tree.SelectedNode!=null || tree.SelectedItem!=null))
             {
                 var listControl = FindVisualChildByName(tree, "ListControl") as TreeViewList;
-                if (IsInContentMode())
+                var selectedContent = IsInContentMode() ? ((TreeViewItemSource)listControl.SelectedItem).Content : ((TreeViewNode)listControl.SelectedItem).Content.ToString();
+                if(tree.SelectedItems.Count == 1 && tree.SelectedNodes.Count==1 && tree.SelectedNodes[0] == tree.SelectedNode)
                 {
-                    result = "ItemSelected:" + ((TreeViewItemSource)listControl.SelectedItem).Content;
+                    result = "ItemSelected:" + selectedContent;
                 }
                 else
                 {
-                    result = "ItemSelected:" + ((TreeViewNode)listControl.SelectedItem).Content.ToString();
+                    result = "Selected vectors don't match selected node";
                 }
             }
             else if (tree.SelectionMode == TreeViewSelectionMode.Multiple)

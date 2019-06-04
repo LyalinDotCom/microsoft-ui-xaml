@@ -816,41 +816,35 @@ namespace MUXControlsTestApp
 
         private void ToggleSelectedNodes_Click(object sender, RoutedEventArgs e)
         {
-            if(IsInContentMode())
+            ContentModeTestTreeView.SelectionMode = TreeViewSelectionMode.Multiple;
+            var item0 = TestTreeViewItemsSource[0].Children[0];
+            var item2 = TestTreeViewItemsSource[0].Children[2];
+            var selectedItems = ContentModeTestTreeView.SelectedItems;
+            if (selectedItems.Contains(item0))
             {
-                ContentModeTestTreeView.SelectionMode = TreeViewSelectionMode.Multiple;
-                var root0 = TestTreeViewItemsSource[0].Children[0];
-                var root2 = TestTreeViewItemsSource[0].Children[2];
-                var selectedItems = ContentModeTestTreeView.SelectedItems;
-                if (selectedItems.Contains(root0))
-                {
-                    selectedItems.Remove(root0);
-                    selectedItems.Remove(root2);
-                }
-                else
-                {
-                    selectedItems.Add(root0);
-                    selectedItems.Add(root2);
-                }
+                selectedItems.Remove(item0);
+                selectedItems.Remove(item2);
             }
             else
             {
-                TestTreeView.SelectionMode = TreeViewSelectionMode.Multiple;
-                var root0 = TestTreeView.RootNodes[0].Children[0];
-                var root2 = TestTreeView.RootNodes[0].Children[2];
-                var selectedNodes = TestTreeView.SelectedNodes;
-                if (selectedNodes.Contains(root0))
-                {
-                    selectedNodes.Remove(root0);
-                    selectedNodes.Remove(root2);
-                }
-                else
-                {
-                    selectedNodes.Add(root0);
-                    selectedNodes.Add(root2);
-                }
+                selectedItems.Add(item0);
+                selectedItems.Add(item2);
             }
-           
+
+            TestTreeView.SelectionMode = TreeViewSelectionMode.Multiple;
+            var node0 = TestTreeView.RootNodes[0].Children[0];
+            var node2 = TestTreeView.RootNodes[0].Children[2];
+            var selectedNodes = TestTreeView.SelectedNodes;
+            if (selectedNodes.Contains(node0))
+            {
+                selectedNodes.Remove(node0);
+                selectedNodes.Remove(node2);
+            }
+            else
+            {
+                selectedNodes.Add(node0);
+                selectedNodes.Add(node2);
+            }
         }
 
         private void AddInheritedTreeViewNode_Click(object sender, RoutedEventArgs e)
@@ -874,24 +868,8 @@ namespace MUXControlsTestApp
 
         private void ToggleRoot0Selection_Click(object sender, RoutedEventArgs e)
         {
-            if(TestTreeView.SelectedNode == null)
-            {
-                TestTreeView.SelectedNode = TestTreeView.RootNodes[0].Children[0];
-                
-            }
-            else
-            {
-                TestTreeView.SelectedNode = null;
-            }
-
-            if(ContentModeTestTreeView.SelectedItem == null)
-            {
-                ContentModeTestTreeView.SelectedItem = TestTreeViewItemsSource[0].Children[0];
-            }
-            else
-            {
-                ContentModeTestTreeView.SelectedItem = null;
-            }
+            TestTreeView.SelectedNode = TestTreeView.SelectedNode == null ? TestTreeView.RootNodes[0].Children[0] : null;
+            ContentModeTestTreeView.SelectedItem = ContentModeTestTreeView.SelectedItem==null ? TestTreeViewItemsSource[0].Children[0] : null;
         }
 
         private void TreeViewNodeInMarkupTestPage_Click(object sender, RoutedEventArgs e)

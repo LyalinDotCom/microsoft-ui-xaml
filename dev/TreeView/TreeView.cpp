@@ -210,7 +210,6 @@ void TreeView::OnPropertyChanged(const winrt::DependencyPropertyChangedEventArgs
     if (property == s_SelectionModeProperty && m_listControl)
     {
         winrt::TreeViewSelectionMode value = SelectionMode();
-
         switch (value)
         {
             case winrt::TreeViewSelectionMode::None:
@@ -233,6 +232,7 @@ void TreeView::OnPropertyChanged(const winrt::DependencyPropertyChangedEventArgs
                 UpdateItemsSelectionMode(true);
             }
             break;
+
         }
     }
     else if (property == s_ItemsSourceProperty)

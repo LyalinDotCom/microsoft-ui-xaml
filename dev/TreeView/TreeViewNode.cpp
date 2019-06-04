@@ -202,6 +202,7 @@ void TreeViewNode::OnItemsSourceChanged(const winrt::IInspectable& sender, const
         {
             RemoveItemsFromTreeViewNodes(args.OldStartingIndex(), args.OldItems().Size());
             AddItemsToTreeViewNodes(args.NewStartingIndex(), args.NewItems().Size());
+            break;
         }
     }
 }

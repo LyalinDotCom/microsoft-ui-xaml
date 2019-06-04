@@ -471,34 +471,31 @@ void TreeViewItem::OnIsSelectedChanged(const winrt::DependencyObject& /*sender*/
         bool isMultiselect = listControl->IsMultiselect();
         auto viewModel = listControl->ListViewModel();
 
-        if (isSelected != m_selectionBox.get().IsChecked().Value())
+        // Checkbox is only used in multi-select mode
+        if (isMultiselect && isSelected != m_selectionBox.get().IsChecked().Value())
         {
-            if (isMultiselect)
+            m_selectionBox.get().IsChecked(isSelected);
+        }
+
+        if (auto node = TreeNode())
+        {
+            auto selectedNodes = viewModel->GetSelectedNodes();
+
+            if (!isMultiselect)
             {
-                // Checkbox is used only in multi-select mode
-                m_selectionBox.get().IsChecked(isSelected);
+                selectedNodes.Clear();
             }
 
-            if (auto node = TreeNode())
+            if (isSelected)
             {
-                auto selectedNodes = viewModel->GetSelectedNodes();
-
-                if (!isMultiselect)
+                selectedNodes.Append(node);
+            }
+            else
+            {
+                unsigned int index;
+                if (selectedNodes.IndexOf(node, index))
                 {
-                    selectedNodes.Clear();
-                }
-
-                if (isSelected)
-                {
-                    selectedNodes.Append(node);
-                }
-                else
-                {
-                    unsigned int index;
-                    if (selectedNodes.IndexOf(node, index))
-                    {
-                        selectedNodes.RemoveAt(index);
-                    }
+                    selectedNodes.RemoveAt(index);
                 }
             }
         }

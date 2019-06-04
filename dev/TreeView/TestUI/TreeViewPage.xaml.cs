@@ -82,29 +82,41 @@ namespace MUXControlsTestApp
             base.OnNavigatedFrom(e);
         }
 
-        private String GetSelection(TreeView tree)
+        private string GetSelection(TreeView tree)
         {
-            String result="";
-            if (tree.SelectionMode == TreeViewSelectionMode.Single 
-                && (tree.SelectedNode!=null || tree.SelectedItem!=null))
+            int count = tree.SelectedNodes.Count;
+
+            if (count != tree.SelectedItems.Count)
             {
-                var listControl = FindVisualChildByName(tree, "ListControl") as TreeViewList;
-                var selectedContent = IsInContentMode() ? ((TreeViewItemSource)listControl.SelectedItem).Content : ((TreeViewNode)listControl.SelectedItem).Content.ToString();
-                if(tree.SelectedItems.Count == 1 && tree.SelectedNodes.Count==1 && tree.SelectedNodes[0] == tree.SelectedNode)
+                return "SelectedNodes.Count != SelectedItems.Count";
+            }
+
+            List<string> result = new List<string>();
+            for (int i = 0; i < count; i++)
+            {
+                // Make sure selectedNodes and SelectedItems are in sync
+                var node = tree.SelectedNodes[i];
+                var item = IsInContentMode() ? node.Content : node;
+                if (item != tree.SelectedItems[i])
                 {
-                    result = "ItemSelected:" + selectedContent;
+                    return "$SelectedNodes[{i}] != SelectedItems[{i}]";
                 }
-                else
+
+                result.Add(GetNodeContent(node));
+            }
+
+            result.Sort();
+
+            // Verify SelectedItem and SelectedNode for single selection
+            if(tree.SelectionMode == TreeViewSelectionMode.Single && result.Count > 0)
+            {
+                if(tree.SelectedItem != tree.SelectedItems[0] || tree.SelectedNode != tree.SelectedNodes[0])
                 {
-                    result = "Selected vectors don't match selected node";
+                    return "SelectedItem!=SelectedItems[0] || SelectedNode!=SelectedNodes[0]";
                 }
             }
-            else if (tree.SelectionMode == TreeViewSelectionMode.Multiple)
-            {
-                int count = IsInContentMode() ? tree.SelectedItems.Count : tree.SelectedNodes.Count;
-                result = "Num. Selected: " + count;
-            }
-            return result;
+
+            return result.Count > 0 ? "Selected: " + string.Join(", ", result) : "Nothing selected";
         }
 
         private void GetSelected_Click(object sender, RoutedEventArgs e)
